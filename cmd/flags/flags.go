@@ -13,6 +13,7 @@ const (
 	DBPasswordFlagName = "db-password"
 	DBNameFlagName     = "db-name"
 	DBSSLModeFlagName  = "db-ssl-mode"
+	APIPortFlagName    = "api-port"
 )
 
 func Verbose() *cli.BoolFlag {
@@ -78,5 +79,15 @@ func DBSSLMode() *cli.StringFlag {
 		Usage:   "database ssl mode.",
 		Value:   "disable",
 		EnvVars: []string{envvarname.DBSSLMode},
+	}
+}
+
+func APIPort() *cli.IntFlag {
+	return &cli.IntFlag{
+		Name:    APIPortFlagName,
+		Aliases: []string{"a"},
+		Usage:   "port to listen on",
+		Value:   8080,
+		EnvVars: []string{envvarname.APIPort},
 	}
 }

@@ -15,3 +15,6 @@ NEXT_VERSION=$(if $(RELEASE_VERSION),$(RELEASE_VERSION),$(shell echo $(LATEST_VE
 
 migrator:
 	go build -ldflags "-X 'main.version=$(NEXT_VERSION)'" -o $(OUTPUT_DIR)/migrator ./cmd/migrator/main.go
+
+api:
+	go build -ldflags "-X 'main.version=$(NEXT_VERSION)'" -o $(OUTPUT_DIR)/api ./cmd/api/main.go
