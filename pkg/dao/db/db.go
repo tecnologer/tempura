@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"github.com/tecnologer/tempura/pkg/utils/log"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -52,6 +53,8 @@ func (c *Connection) Commit() error {
 	c.DB = c.DB.Commit()
 	c.hasTransaction = false
 
+	log.Debug("transaction committed")
+
 	return nil
 }
 
@@ -62,6 +65,8 @@ func (c *Connection) Rollback() error {
 
 	c.DB = c.DB.Rollback()
 	c.hasTransaction = false
+
+	log.Debug("transaction rolled back")
 
 	return nil
 }

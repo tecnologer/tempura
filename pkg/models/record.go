@@ -7,4 +7,5 @@ type Record struct {
 	Temperature float64 `json:"temperature"`
 	Humidity    float64 `json:"humidity"`
 	FluidLevel  float64 `json:"fluid_level"`
+	BatLevel    float64 `json:"bat_level"`
 }
