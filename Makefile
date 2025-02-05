@@ -18,3 +18,6 @@ migrator:
 
 api:
 	go build -ldflags "-X 'main.version=$(NEXT_VERSION)'" -o $(OUTPUT_DIR)/api ./cmd/api/main.go
+
+pack:
+	docker save tempura-api:latest tempura-migrator:latest -o tempura.tar

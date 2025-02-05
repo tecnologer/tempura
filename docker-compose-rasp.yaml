@@ -1,0 +1,51 @@
+---
+x-env: &env
+  TEMPURA_DB_CONTAINER: ${TEMPURA_DB_CONTAINER:-tempura-database}
+  TEMPURA_DB_HOST: ${TEMPURA_DB_HOST:-database}
+  TEMPURA_DB_PORT: ${TEMPURA_DB_PORT:-5432}
+  TEMPURA_DB_PASSWORD: ${TEMPURA_DB_PASSWORD:-Tempura**123}
+  TEMPURA_DB_USERNAME: ${TEMPURA_DB_USERNAME:-tempura}
+  TEMPURA_DB_NAME: ${TEMPURA_DB_NAME:-tempura}
+  TEMPURA_API_PORT: ${TEMPURA_API_PORT:-80}
+  TEMPURA_LOCAL_API_PORT: ${TEMPURA_API_PORT:-8080}
+  POSTGRES_PASSWORD: ${TEMPURA_DB_PASSWORD:-Tempura**123}
+  POSTGRES_USER: ${TEMPURA_DB_USERNAME:-tempura}
+  POSTGRES_DB: ${TEMPURA_DB_NAME:-tempura}
+services:
+  database:
+    image: postgres:latest
+    platform: "linux/arm64/v8"
+    container_name: "${TEMPURA_DB_CONTAINER}"
+    ports:
+      - "${TEMPURA_DB_PORT}:${TEMPURA_DB_PORT}"
+    environment:
+      <<: *env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  migrator:
+    build:
+      context: ./
+      dockerfile: Dockerfile.migrator
+    environment:
+      <<: *env
+    command: ["/wait-for-it.sh", "database:${TEMPURA_DB_PORT}", "--", "./migrator", "-H", "database", "-d", "${TEMPURA_DB_NAME}", "-u", "${TEMPURA_DB_USERNAME}", "-P", "${TEMPURA_DB_PASSWORD}", "--ssl-mode", "${TEMPURA_DB_SSL_MODE}", "-p", "${TEMPURA_DB_PORT}"]
+    depends_on:
+      - database
+
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile.api
+    ports:
+      - "8080:80"
+    environment:
+      <<: *env
+    depends_on:
+      - migrator
+      - database
+
+
+volumes:
+  db_data:

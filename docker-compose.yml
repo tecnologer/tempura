@@ -19,6 +19,8 @@ services:
       - "${TEMPURA_DB_PORT}:${TEMPURA_DB_PORT}"
     environment:
       <<: *env
+    volumes:
+      - db_data:/var/lib/postgresql/data
     restart: unless-stopped
 
   migrator:
@@ -43,3 +45,6 @@ services:
       - migrator
       - database
 
+
+volumes:
+  db_data:
