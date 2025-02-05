@@ -2,8 +2,8 @@ package db
 
 import (
 	"fmt"
-	"github.com/tecnologer/tempura/pkg/utils/log"
 
+	"github.com/tecnologer/tempura/pkg/utils/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -14,6 +14,8 @@ type Connection struct {
 }
 
 func NewConnection(config *Config) (*Connection, error) {
+	log.Infof("connecting to the DB at %s:%s as user %s", config.Host, config.Port, config.User)
+
 	dsn, err := config.DSN()
 	if err != nil {
 		return nil, fmt.Errorf("create DSN: %w", err)
@@ -29,6 +31,8 @@ func NewConnection(config *Config) (*Connection, error) {
 		return nil, fmt.Errorf("open connection: %w", err)
 	}
 
+	log.Infof("DB connection established")
+
 	return &Connection{
 		DB: gormDB,
 	}, nil
@@ -41,6 +45,8 @@ func (c *Connection) BeginTransaction() error {
 
 	c.DB = c.DB.Begin()
 	c.hasTransaction = true
+
+	log.Debug("transaction started")
 
 	return nil
 }

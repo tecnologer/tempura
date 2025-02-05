@@ -6,14 +6,17 @@ import (
 )
 
 const (
-	VerboseFlagName    = "verbose"
-	DBHostFlagName     = "db-host"
-	DBPortFlagName     = "db-port"
-	DBUsernameFlagName = "db-username"
-	DBPasswordFlagName = "db-password"
-	DBNameFlagName     = "db-name"
-	DBSSLModeFlagName  = "db-ssl-mode"
-	APIPortFlagName    = "api-port"
+	VerboseFlagName     = "verbose"
+	DBHostFlagName      = "db-host"
+	DBPortFlagName      = "db-port"
+	DBUsernameFlagName  = "db-username"
+	DBPasswordFlagName  = "db-password"
+	DBNameFlagName      = "db-name"
+	DBSSLModeFlagName   = "db-ssl-mode"
+	APIPortFlagName     = "api-port"
+	APIReadTimeoutName  = "api-read-timeout"
+	APIWriteTimeoutName = "api-write-timeout"
+	APIIdleTimeoutName  = "api-idle-timeout"
 )
 
 func Verbose() *cli.BoolFlag {
@@ -89,5 +92,32 @@ func APIPort() *cli.IntFlag {
 		Usage:   "port to listen on",
 		Value:   8080,
 		EnvVars: []string{envvarname.APIPort},
+	}
+}
+
+func APIReadTimeout() *cli.IntFlag {
+	return &cli.IntFlag{
+		Name:    APIReadTimeoutName,
+		Aliases: []string{"rt"},
+		Usage:   "read timeout for the API server",
+		Value:   30,
+	}
+}
+
+func APIWriteTimeout() *cli.IntFlag {
+	return &cli.IntFlag{
+		Name:    APIWriteTimeoutName,
+		Aliases: []string{"wt"},
+		Usage:   "write timeout for the API server",
+		Value:   15,
+	}
+}
+
+func APIIdleTimeout() *cli.IntFlag {
+	return &cli.IntFlag{
+		Name:    APIIdleTimeoutName,
+		Aliases: []string{"it"},
+		Usage:   "idle timeout for the API server",
+		Value:   60,
 	}
 }

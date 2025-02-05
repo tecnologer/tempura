@@ -1,0 +1,30 @@
+FROM golang:1.23.0
+
+# Set the Current Working Directory inside the container
+WORKDIR /migrator
+
+COPY go.mod go.sum ./
+
+# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+RUN go mod download
+
+# Copy the source from the current directory to the Working Directory inside the container
+COPY ./cmd/migrator ./cmd/migrator
+COPY ./cmd/flags ./cmd/flags
+COPY ./pkg ./pkg
+COPY ./wait-for-it.sh /wait-for-it.sh
+
+# install netcat, used in the wait-for-it.sh script
+RUN apt-get update && apt-get --no-install-recommends install -y netcat-openbsd
+
+RUN chmod +x /wait-for-it.sh
+
+# Run go mod tidy to clean up the module dependencies
+RUN go mod tidy
+
+# Build the Go app
+RUN go build -o ./migrator ./cmd/migrator/main.go
+
+# Command to run the executable
+# ./migrator --verbose -H $DB_HOST -d $DB_NAME -u $DB_USER -P $DB_PASSWORD --ssl-mode $DB_SSL_MODE -p $DB_PORT
+CMD ./migrator --verbose -H, $TEMPURA_DB_HOST -d, $TEMPURA_DB_NAME -u, $TEMPURA_DB_USERNAME -P, $TEMPURA_DB_PASSWORD --ssl-mode, $TEMPURA_DB_SSL_MODE -p, $TEMPURA_DB_PORT

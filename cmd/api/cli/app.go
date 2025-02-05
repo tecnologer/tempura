@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/tecnologer/tempura/cmd/api/handler"
 	"github.com/tecnologer/tempura/cmd/api/middleware"
@@ -44,6 +45,9 @@ func (c *CLI) setupApp(versionValue string) {
 			flags.DBPassword(),
 			flags.DBSSLMode(),
 			flags.APIPort(),
+			flags.APIWriteTimeout(),
+			flags.APIReadTimeout(),
+			flags.APIIdleTimeout(),
 		},
 		EnableBashCompletion: true,
 	}
@@ -74,13 +78,26 @@ func (c *CLI) run(ctx *cli.Context) error {
 		addr       = fmt.Sprintf(":%d", ctx.Int(flags.APIPortFlagName))
 	)
 
-	log.Infof("listening on %s", addr)
+	negroniMiddleware := negroni.New(middleware.NewMiddleware())
+	negroniMiddleware.UseHandler(apiRouter)
 
-	n := negroni.New(middleware.NewMiddleware())
+	server := &http.Server{
+		Addr:         addr,
+		Handler:      negroniMiddleware,
+		ReadTimeout:  time.Duration(ctx.Int(flags.APIReadTimeoutName)) * time.Second,
+		WriteTimeout: time.Duration(ctx.Int(flags.APIWriteTimeoutName)) * time.Second,
+		IdleTimeout:  time.Duration(ctx.Int(flags.APIIdleTimeoutName)) * time.Second,
+	}
 
-	n.UseHandler(apiRouter)
+	log.Infof(
+		"listening on %s with read time out %d secods, write time out %d seconds and idle time out %d seconds",
+		addr,
+		ctx.Int(flags.APIReadTimeoutName),
+		ctx.Int(flags.APIWriteTimeoutName),
+		ctx.Int(flags.APIIdleTimeoutName),
+	)
 
-	if err := http.ListenAndServe(addr, n); err != nil {
+	if err := server.ListenAndServe(); err != nil {
 		log.Error(err.Error())
 	}
 
@@ -88,8 +105,6 @@ func (c *CLI) run(ctx *cli.Context) error {
 }
 
 func (c *CLI) createConnection(ctx *cli.Context) (*db.Connection, error) {
-	log.Infof("connecting to the DB at %s:%s", ctx.String(flags.DBHostFlagName), ctx.String(flags.DBPortFlagName))
-
 	dbConfig := &db.Config{
 		Host:     ctx.String(flags.DBHostFlagName),
 		Port:     ctx.String(flags.DBPortFlagName),
@@ -103,8 +118,6 @@ func (c *CLI) createConnection(ctx *cli.Context) (*db.Connection, error) {
 	if err != nil {
 		return nil, fmt.Errorf("create new connection: %w", err)
 	}
-
-	log.Infof("connection to the DB at %s:%s established", ctx.String(flags.DBHostFlagName), ctx.String(flags.DBPortFlagName))
 
 	return cnn, nil
 }
