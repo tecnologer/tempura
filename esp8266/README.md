@@ -26,5 +26,25 @@ SCK (SCL)	| D1 (GPIO5)	I2C|  Clock Line
 ### Buy at:
  - [Mercado Libre][2]
 
+## Battery LiPo 1 Cell
+
+Lipo battery 3.7v to 1200mah.
+
+Component |	Connection
+---|----
+Battery Positive |	Connect to R1 (30kΩ)
+R1 (30kΩ)	| Connect to R2 (10kΩ)
+Between R1 and R2 | 	Connect to A0 pin on ESP8266
+R2 (10kΩ)	| Connect to GND
+Battery Ground	| Connect to GND on ESP8266
+
+```
+  [ Battery + ] ----[ R1 (33kΩ or 39kΩ) ]----+----[ A0 on ESP8266 ]
+                                             |
+                                         [ R2 (10kΩ) ]
+                                             |
+  [ Battery - ] ----------------------------[ GND on ESP8266 ]
+```
+
 [1]: https://articulo.mercadolibre.com.mx/MLM-593332982-switch-sensor-nivel-agua-metal-arduino-pic-avr-raspberry-_JM
 [2]: https://www.mercadolibre.com.mx/sensor-de-humedad-del-suelo-sonda-de-temperatura-alta-prec/p/MLM2000952700
