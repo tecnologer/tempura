@@ -6,7 +6,7 @@ A steel sensor of the water level with a voltage range of 0 – 250.
 
 SW-AGUA-INOX | Pin	Connection
 ----|----
-One Wire |	D1 (GPIO5) or any digital pin
+One Wire |	D5 (GPIO14) or any digital pin
 Other Wire |	GND
 
 ### Buy at: 
