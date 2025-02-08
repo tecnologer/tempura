@@ -46,5 +46,9 @@ Battery Ground	| Connect to GND on ESP8266
   [ Battery - ] ----------------------------[ GND on ESP8266 ]
 ```
 
+### Buy at:
+  - [Mercado Libre][3]
+
 [1]: https://articulo.mercadolibre.com.mx/MLM-593332982-switch-sensor-nivel-agua-metal-arduino-pic-avr-raspberry-_JM
 [2]: https://www.mercadolibre.com.mx/sensor-de-humedad-del-suelo-sonda-de-temperatura-alta-prec/p/MLM2000952700
+[3]: https://articulo.mercadolibre.com.mx/MLM-3264635028-bateria-lipo-37v-1200mah-3cables-_JM
