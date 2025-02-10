@@ -3,22 +3,33 @@ package dao
 import (
 	"context"
 	"fmt"
+	"os"
 
+	"github.com/tecnologer/tempura/pkg/contants/envvarname"
 	"github.com/tecnologer/tempura/pkg/dao/db"
 	"github.com/tecnologer/tempura/pkg/models"
 	"github.com/tecnologer/tempura/pkg/utils/log"
 )
 
 type Records struct {
-	cnn *db.Connection
+	cnn           *db.Connection
+	notifications *Notification
 }
 
 func NewRecords(cnn *db.Connection) *Records {
-	return &Records{cnn: cnn}
+	notifications, err := NewNotification(cnn, os.Getenv(envvarname.TelegramBotToken))
+	if err != nil {
+		log.Errorf("creating notification service: %v", err)
+	}
+
+	return &Records{
+		cnn:           cnn,
+		notifications: notifications,
+	}
 }
 
 func (r *Records) InsertRecord(_ context.Context, record *models.Record) (*models.Record, error) {
-	log.Debug("inserting record")
+	log.Debugf("inserting record: %s", record)
 
 	tx := r.cnn.DB.Create(record)
 	if tx.Error != nil {
@@ -26,6 +37,11 @@ func (r *Records) InsertRecord(_ context.Context, record *models.Record) (*model
 	}
 
 	log.Debug("record inserted")
+
+	err := r.NotifyNewRecord(record)
+	if err != nil {
+		return record, fmt.Errorf("notifying new record: %w", err)
+	}
 
 	return record, nil
 }
@@ -54,4 +70,17 @@ func (r *Records) GetRecord(_ context.Context, id string) (*models.Record, error
 	}
 
 	return &record, nil
+}
+
+func (r *Records) NotifyNewRecord(record *models.Record) error {
+	if r.notifications == nil {
+		return nil
+	}
+
+	err := r.notifications.NotifyNewRecord(record)
+	if err != nil {
+		return fmt.Errorf("notifying new record: %w", err)
+	}
+
+	return nil
 }

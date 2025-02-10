@@ -4,6 +4,7 @@ go 1.23.0
 
 require (
 	github.com/charmbracelet/log v0.4.0
+	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/gorilla/mux v1.8.1
 	github.com/stretchr/testify v1.10.0
 	github.com/urfave/cli/v2 v2.27.5

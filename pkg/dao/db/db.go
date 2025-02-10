@@ -21,6 +21,8 @@ func NewConnection(config *Config) (*Connection, error) {
 		return nil, fmt.Errorf("create DSN: %w", err)
 	}
 
+	log.Debugf("DSN created: %s", dsn)
+
 	postgresConfig := postgres.Config{
 		DSN:                  dsn,
 		PreferSimpleProtocol: true,
