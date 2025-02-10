@@ -6,6 +6,7 @@ import (
 	"github.com/tecnologer/tempura/pkg/utils/log"
 )
 
+//nolint:gofumpt // TBD
 type Middleware struct {
 }
 

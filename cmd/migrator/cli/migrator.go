@@ -16,6 +16,7 @@ func NewMigrator() *Migrator {
 	return &Migrator{
 		Models: []any{
 			&models.Record{},
+			&models.User{},
 		},
 	}
 }
