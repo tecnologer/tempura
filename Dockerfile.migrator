@@ -27,4 +27,4 @@ RUN go build -o ./migrator ./cmd/migrator/main.go
 
 # Command to run the executable
 # ./migrator --verbose -H $DB_HOST -d $DB_NAME -u $DB_USER -P $DB_PASSWORD --ssl-mode $DB_SSL_MODE -p $DB_PORT
-CMD ./migrator --verbose -H, $TEMPURA_DB_HOST -d, $TEMPURA_DB_NAME -u, $TEMPURA_DB_USERNAME -P, $TEMPURA_DB_PASSWORD --ssl-mode, $TEMPURA_DB_SSL_MODE -p, $TEMPURA_DB_PORT
+CMD ./migrator --verbose -H $TEMPURA_DB_HOST -d $TEMPURA_DB_NAME -u $TEMPURA_DB_USERNAME -P $TEMPURA_DB_PASSWORD --ssl-mode $TEMPURA_DB_SSL_MODE -p $TEMPURA_DB_PORT
