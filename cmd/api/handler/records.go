@@ -25,7 +25,7 @@ func (h *Handler) CreateRecord(writer http.ResponseWriter, request *http.Request
 
 	log.Debugf("record: %v", *record)
 
-	record, err = dao.NewRecords(h.Connection).InsertRecord(request.Context(), record)
+	record, err = h.records.InsertRecord(request.Context(), record)
 	if err != nil {
 		InternalServerError(writer, "inserting record", err)
 
@@ -40,7 +40,7 @@ func (h *Handler) GetRecords(writer http.ResponseWriter, request *http.Request) 
 		Limit: 1000,
 	}
 
-	records, err := dao.NewRecords(h.Connection).GetRecords(request.Context(), filters)
+	records, err := h.records.GetRecords(request.Context(), filters)
 	if err != nil {
 		InternalServerError(writer, "getting records", err)
 
@@ -53,7 +53,7 @@ func (h *Handler) GetRecords(writer http.ResponseWriter, request *http.Request) 
 func (h *Handler) GetRecord(writer http.ResponseWriter, request *http.Request) {
 	id := request.URL.Query().Get("id")
 
-	record, err := dao.NewRecords(h.Connection).GetRecord(request.Context(), id)
+	record, err := h.records.GetRecord(request.Context(), id)
 	if err != nil {
 		InternalServerError(writer, "getting record", err)
 
