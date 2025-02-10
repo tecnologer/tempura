@@ -21,3 +21,12 @@ api:
 
 pack:
 	docker save tempura-api:latest tempura-migrator:latest -o tempura.tar
+
+docker:
+	docker compose -f docker-compose.yml up --build -d
+
+docker-down:
+	docker stop $(shell docker ps -a -q)
+
+docker-rasp:
+	docker compose -f docker-compose-rasp.yml up --build -d
