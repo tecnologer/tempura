@@ -1,5 +1,9 @@
 # ESP8266: Sensors Configuration
 
+## Diagram
+
+![diagram](./diagram.jpg)
+
 ## SW-AGUA-INOX
 
 A steel sensor of the water level with a voltage range of 0 – 250.
