@@ -10,11 +10,11 @@
 #define MAX_ADC 1023.0        // 10-bit ADC resolution
 #define REF_VOLTAGE 3.3       // ESP8266 ADC max voltage is 1V
 
-const char* ssid = "<WIFI_SSID>";
-const char* password = "<WIFI_PASSWORD>";
+const char* ssid = WIFI_SSID;
+const char* password = WIFI_PASSWORD;
 
 //Your Domain name with URL path or IP address with path
-const char* serverName = "<URL>";
+const char* serverName = API_URL;
 
 const int EMPTY_TANK = 0;
 const int FULL_TANK = 100;
