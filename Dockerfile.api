@@ -17,6 +17,12 @@ COPY ./pkg ./pkg
 # Run go mod tidy to clean up the module dependencies
 RUN go mod tidy
 
+# install enumer
+RUN go install github.com/dmarkham/enumer@latest
+
+# generate enums
+RUN go generate ./...
+
 # Build the Go app
 RUN go build -o ./tempura-api ./cmd/api/main.go
 

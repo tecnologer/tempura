@@ -2,3 +2,4 @@
 bin/
 .idea/
 users.psql
+*_enumer.go
