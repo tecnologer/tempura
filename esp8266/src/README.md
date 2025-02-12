@@ -1,5 +1,7 @@
 # ESP8266: Sensors Configuration
 
+This directory the source code for the ESP8266 microcontroller.
+
 ## Diagram
 
 ![diagram](./diagram.jpg)
