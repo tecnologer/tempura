@@ -1,58 +1,32 @@
-# ESP8266: Sensors Configuration
+# Platformio
 
-## Diagram
+This guide will help you set up and build projects using [Platformio][1] by defining necessary environment variables in a `.env` file.
 
-![diagram](./diagram.jpg)
+## Installation
 
-## SW-AGUA-INOX
+You can install Platformio on Visual Studio Code or Atom using the links below:
 
-A steel sensor of the water level with a voltage range of 0 – 250.
+- [Visual Studio Code][2]
+- [Atom][3]
 
-SW-AGUA-INOX | Pin	Connection
-----|----
-One Wire |	D5 (GPIO14) or any digital pin
-Other Wire |	GND
+## Configuration
 
-### Buy at: 
- - [Mercado Libre][1]
+### Environment Variables
 
-## SHT30
+To run your projects, you need to set up an environment file (`.env`) that includes the Wi-Fi credentials and API URL. Create a `.env` file in your project's root directory and populate it with the following content:
 
-Soil Temperature and Humidity Sensor High Precision Probe with I2C Output with 1.5m Cable DC3.3V
+```env
+# Wi-Fi Configuration
+WIFI_SSID=TheNameOfYourWifi
+WIFI_PASSWORD=YourWifiPassword
 
-SHT30 Pin |	ESP8266 Pin |	Description
-----|----|----
-VCC	| 3.3V |	Power supply
-GND	| GND	| Ground
-SDA	| D2 (GPIO4)	I2C | Data Line
-SCK (SCL)	| D1 (GPIO5)	I2C|  Clock Line
-
-### Buy at:
- - [Mercado Libre][2]
-
-## Battery LiPo 1 Cell
-
-Lipo battery 3.7v to 1200mah.
-
-Component |	Connection
----|----
-Battery Positive |	Connect to R1 (30kΩ)
-R1 (30kΩ)	| Connect to R2 (10kΩ)
-Between R1 and R2 | 	Connect to A0 pin on ESP8266
-R2 (10kΩ)	| Connect to GND
-Battery Ground	| Connect to GND on ESP8266
+# API Configuration
+API_URL=http://localhost:88/v1/records
 
 ```
-  [ Battery + ] ----[ R1 (33kΩ or 39kΩ) ]----+----[ A0 on ESP8266 ]
-                                             |
-                                         [ R2 (10kΩ) ]
-                                             |
-  [ Battery - ] ----------------------------[ GND on ESP8266 ]
-```
 
-### Buy at:
-  - [Mercado Libre][3]
+**Note:** Ensure that your Wi-Fi password does not contain special characters that might be misinterpreted by your system or the application.
 
-[1]: https://articulo.mercadolibre.com.mx/MLM-593332982-switch-sensor-nivel-agua-metal-arduino-pic-avr-raspberry-_JM
-[2]: https://www.mercadolibre.com.mx/sensor-de-humedad-del-suelo-sonda-de-temperatura-alta-prec/p/MLM2000952700
-[3]: https://articulo.mercadolibre.com.mx/MLM-3264635028-bateria-lipo-37v-1200mah-3cables-_JM
+[1]: https://platformio.org/
+[2]: https://code.visualstudio.com/
+[3]: https://atom-editor.cc/
