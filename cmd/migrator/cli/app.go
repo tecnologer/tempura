@@ -40,6 +40,8 @@ func (c *CLI) setupApp(versionValue string) {
 			flags.DBUsername(),
 			flags.DBPassword(),
 			flags.DBSSLMode(),
+			flags.SkipModels(),
+			flags.SkipScripts(),
 		},
 		EnableBashCompletion: true,
 	}
@@ -49,6 +51,10 @@ func (c *CLI) beforeRun(ctx *cli.Context) error {
 	// Disable color globally.
 	if ctx.Bool(flags.VerboseFlagName) {
 		log.SetLevel(log.DebugLevel)
+	}
+
+	if ctx.Bool(flags.ImporterSkipModels) && ctx.Bool(flags.ImporterSkipScripts) {
+		return fmt.Errorf("cannot skip both models and scripts")
 	}
 
 	return nil
@@ -62,27 +68,34 @@ func (c *CLI) run(ctx *cli.Context) error {
 		return fmt.Errorf("create db connection: %w", err)
 	}
 
-	err = c.migrator.Run(dbCnn.DB)
-	if err != nil {
-		log.Warn("transaction rollback")
-
-		if rErr := dbCnn.Rollback(); rErr != nil {
-			log.Warn("transaction rollback failed")
-
-			err = fmt.Errorf("rollback: %w", rErr)
+	defer func() {
+		if err != nil {
+			if rErr := dbCnn.Rollback(); rErr != nil {
+				log.Warn("transaction rollback failed")
+			}
 		}
+	}()
 
-		return fmt.Errorf("run migrator: %w", err)
+	if !ctx.Bool(flags.ImporterSkipModels) {
+		err = c.migrateModels(dbCnn)
+		if err != nil {
+			return fmt.Errorf("migrate models: %w", err)
+		}
 	}
 
-	log.Info("committing transaction")
+	if !ctx.Bool(flags.ImporterSkipScripts) {
+		err = c.migrateScripts(dbCnn)
+		if err != nil {
+			return fmt.Errorf("migrate scripts: %w", err)
+		}
+	}
+
+	log.Info("committing transaction for scripts")
 
 	if rErr := dbCnn.Commit(); rErr != nil {
 		log.Warn("transaction commit failed")
 		return fmt.Errorf("commit: %w", rErr)
 	}
-
-	log.Info("migration completed")
 
 	return nil
 }
@@ -115,4 +128,38 @@ func (c *CLI) createConnection(ctx *cli.Context) (*db.Connection, error) {
 	log.Infof("transaction started")
 
 	return cnn, nil
+}
+
+func (c *CLI) migrateModels(dbCnn *db.Connection) error {
+	log.Info("migrating models")
+
+	err := c.migrator.Run(dbCnn.DB)
+	if err != nil {
+		return fmt.Errorf("run migrator: %w", err)
+	}
+
+	log.Info("models migrated")
+
+	return nil
+}
+
+func (c *CLI) migrateScripts(dbCnn *db.Connection) error {
+	log.Info("migrating scripts")
+
+	err := c.migrator.RunScripts(dbCnn.DB)
+	if err != nil {
+		log.Warn("transaction rollback")
+
+		if rErr := dbCnn.Rollback(); rErr != nil {
+			log.Warn("transaction rollback failed")
+
+			err = fmt.Errorf("rollback: %w", rErr)
+		}
+
+		return fmt.Errorf("run scripts: %w", err)
+	}
+
+	log.Info("scripts migrated")
+
+	return nil
 }

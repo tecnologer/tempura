@@ -17,6 +17,8 @@ const (
 	APIReadTimeoutName  = "api-read-timeout"
 	APIWriteTimeoutName = "api-write-timeout"
 	APIIdleTimeoutName  = "api-idle-timeout"
+	ImporterSkipModels  = "skip-models"
+	ImporterSkipScripts = "skip-scripts"
 )
 
 func Verbose() *cli.BoolFlag {
@@ -119,5 +121,19 @@ func APIIdleTimeout() *cli.IntFlag {
 		Aliases: []string{"it"},
 		Usage:   "idle timeout for the API server",
 		Value:   60,
+	}
+}
+
+func SkipModels() *cli.BoolFlag {
+	return &cli.BoolFlag{
+		Name:  ImporterSkipModels,
+		Usage: "skip models migration",
+	}
+}
+
+func SkipScripts() *cli.BoolFlag {
+	return &cli.BoolFlag{
+		Name:  ImporterSkipScripts,
+		Usage: "skip scripts migration",
 	}
 }
