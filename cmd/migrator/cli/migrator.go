@@ -33,6 +33,7 @@ func NewMigrator() *Migrator {
 			&models.Record{},
 			&models.User{},
 			&models.NotificationSetting{},
+			&models.CasbinRule{},
 		},
 	}
 }

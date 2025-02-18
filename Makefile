@@ -30,3 +30,9 @@ docker-down:
 
 docker-rasp:
 	docker compose -f docker-compose-rasp.yml up --build -d
+
+prepare:
+	go install github.com/dmarkham/enumer@latest
+
+enumer: prepare
+	go generate ./...
